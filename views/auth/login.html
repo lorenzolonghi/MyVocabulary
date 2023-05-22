@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+
+    <title>MyVocabulary | Accedi</title>
+  </head>
+  <body>
+    
+    <div class="container-fluid h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="login-card">
+                <h1 class="text-center text-purple">MyVocabulary</h1>
+                <h3 class="text-center text-purple my-3">Accedi</h3>
+                <form>
+                  <div class="form-row">
+                    <label>Email</label>
+                    <input type="email" class="form-control" name="email">
+                  </div>
+                  <div class="form-row">
+                    <label>Password</label>
+                    <input type="password" class="form-control" name="password">
+                  </div>
+                  <div class="text-center">
+                    <input type="submit" class="btn btn-primary my-2" value="Accedi">
+                    <p>Non hai un account? <a href="/register">Registrati</a></p>
+                    <p class="text-center text-danger" id="errorLabel"></p>
+                  </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      //elements
+      const loginForm = document.querySelector("form");
+      const errorLabel = document.querySelector("#errorLabel");
+
+      //event handlers
+      loginForm.onsubmit = LoginFormSubmit;
+
+      async function LoginFormSubmit(e){
+        e.preventDefault();
+
+        try {
+          const requestBody = {
+          email: loginForm.email.value,
+          password: loginForm.password.value,
+        };
+
+          //request
+          const res = await fetch("/login", { 
+              method: 'POST', 
+              body: JSON.stringify(requestBody),
+              headers: {'Content-Type': 'application/json'}
+          });  
+
+          if(res.status != 200){
+            const error = await res.json();
+            ShowError(error);
+            return;
+          }
+
+          window.location.href = "/";
+        }
+        catch (err) {
+            ShowError("Errore inaspettato. Riprova più tardi o contatta lo sviluppatore");
+            console.log(err);
+        }       
+      }
+
+
+      function ShowError(error){
+        errorLabel.innerHTML = error;
+      }
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

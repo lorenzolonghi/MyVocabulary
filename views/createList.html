@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+
+    <title>MyVocabulary | Nuova lista</title>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">MyVocabulary</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item active">
+              <a class="nav-link" href="/create-list">Crea lista</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+              <a class="nav-link"><span id="lbl_email"></span></a>
+            </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/logout">Esci</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+      
+      
+    <div class="container h-100">
+        <h1 class="text-center">Nuova lista</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-5">  
+                <form>
+                    <div class="form-row my-5">
+                        <label>Titolo</label>
+                        <input type="text" class="form-control" name="title">
+                    </div>
+                    <div class="form-row my-5">
+                        <label>Vocaboli</label>
+                        <label>Inserisci il vocabolo italiano seguito da quello straniero, separati da punto e virgola</label>
+                        <textarea class="form-control" name="terms" placeholder="cielo;sky" rows="8"></textarea>
+                    </div>
+                    <div class="form-row justify-content-center flex-column">
+                        <input type="submit" class="btn btn-primary" value="Salva lista">
+                        <p class="text-center text-danger" id="errorLabel"></p>
+                        <p class="text-center text-success" id="successLabel"></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      //elements
+      const form = document.querySelector("form");
+      const errorLabel = document.querySelector("#errorLabel");
+      const successLabel = document.querySelector("#successLabel");
+
+      form.onsubmit = FormSubmit;
+
+      async function FormSubmit(e){
+        e.preventDefault();
+
+        const terms = GetTerms();
+
+        const requestBody = {
+            title: form.title.value,
+            terms: terms
+        };
+
+        const res = await fetch("/create-list", { 
+              method: 'POST', 
+              body: JSON.stringify(requestBody),
+              headers: {'Content-Type': 'application/json'}
+          });  
+
+          if(res.status != 200){
+            const error = await res.json();
+            ShowError(error);
+            return;
+          }
+
+          successLabel.innerHTML = "Lezione creata correttamente";
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 1500);
+      }
+
+      function GetTerms(){
+        const text = form.terms.value;
+        const lines = text.split("\n");
+        const filteredLines = lines.filter(Boolean);
+        const terms = [];
+        filteredLines.forEach(line => {
+            const splitLine = line.split(";");
+            const term = {
+                word: splitLine[0],
+                foreignWord: splitLine[1]
+            };
+            terms.push(term);
+        });
+
+        return terms;
+      }
+
+      function ShowError(error){
+        errorLabel.innerHTML = error;
+      }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

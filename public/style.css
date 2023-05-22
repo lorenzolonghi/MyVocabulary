@@ -1,0 +1,45 @@
+:root {
+    --blue: #4361ee;
+    --pink: #f72585;
+    --purple: #3a0ca3;
+    --light-blue: #4cc9f0;
+    --yellow: #ffb703;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+.login-card {
+    padding: 40px 25px;
+    border-radius: 10px;
+    border: 2px  solid black;
+    background-color: var(--light-blue);
+}
+
+
+.list-element {
+    border: 2px solid black;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 3px 0;
+    background-color: var(--light-blue);
+}
+
+
+.navbar {
+    background-color: var(--purple) !important;
+}
+
+.nav-item, .nav-link, .navbar-brand {
+    color: white !important;
+}
